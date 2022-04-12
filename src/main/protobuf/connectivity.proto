@@ -1,0 +1,53 @@
+syntax = "proto3";
+package connectivity;
+
+option java_package = "org.connectivity.common.protobuf";
+option java_outer_classname = "ConnectivityProto";
+option csharp_namespace = "ConnectivityProto";
+
+message DeviceConnectivity
+{
+  message Common{
+    string messageId = 1;
+    string sourceId = 2;
+    string destId = 3;
+    int64 timestamp = 4;
+  }
+  message Base{
+    enum Connectivity{
+      NONE_CONNECTIVITY=0;
+      DISCONNECTED_FR_SOURCE=1;
+      DISCONNECTED_FR_DMZ=2;
+      CONNECTED=3;
+    }
+     Connectivity connectivity=1;
+  }
+
+  Common common=1;
+  Base base=2;
+}
+
+message SystemConnectivity
+{
+  message Common{
+    string messageId = 1;
+    string sourceId = 2;
+    string destId = 3;
+    int64 timestamp = 4;
+  }
+  message Base{
+    enum Connectivity{
+      NONE_CONNECTIVITY=0;
+      DOWN=1;	//system is down. ie disconnected from source
+      UP=2;	//system is up. pipeline is ok
+      DISCONNECTED_FR_DMZ=3;
+      UNKNOWN=4;
+    }
+    Connectivity connectivity=1;
+  }
+
+  Common common=1;
+  Base base=2;
+}
+
+

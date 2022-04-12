@@ -1,0 +1,70 @@
+syntax = "proto3";
+
+option java_package = "org.sgmap.common.protobuf";
+option java_outer_classname = "GeoJSONProto";
+option csharp_namespace = "GeoJSONProto";
+
+message Data {
+  message Common {
+    string messageId = 1;
+    string sourceId = 2;
+    string destId = 3;
+    string timestamp = 4;
+  }
+  message Base {
+    FeatureCollection featureCollection = 1;
+  }
+  Common common=1;
+  Base base=2;
+}
+
+message FeatureCollection {
+	repeated Feature features = 1;
+}
+
+message Feature {
+	map<string, Value>  properties = 1;
+ 	GeomType type = 2;
+	repeated double geometry = 3 [ packed = true ]; // packed = true is to ensure efficient encoding, [long,lat]
+	repeated int64 bbox = 4 [ packed = true ]; // [N,S,E,W]
+}
+
+enum GeomType {
+	UNKNOWN = 0;
+	POINT = 1;
+	LINESTRING = 2;
+	POLYGON = 3;
+	MULTIPOINT = 4;
+	MULTILINESTRING = 5;
+	MULTIPOLYGON = 6;
+}
+
+message Value {
+	// Exactly one of these values must be present in a valid message
+	string string_value = 1;
+	float float_value = 2;
+	double double_value = 3;
+	int64 int_value = 4;
+	uint64 uint_value = 5;
+	sint64 sint_value = 6;
+	bool bool_value = 7;
+}
+
+enum RequestType // To distinguish between request types
+{
+	INIT=0;
+}
+
+message RPCRequest // To send RPC request
+{
+	int64 requestTime=1;
+	RequestType requestType=2;
+	string requestID=3;
+}
+
+message RPCReply // To send RPC reply
+{
+	int64 replyTime=1;
+	string requestID=2;
+	FeatureCollection	featureCollection=3;
+}
